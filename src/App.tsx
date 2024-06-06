@@ -10,9 +10,11 @@ import Register from './Components/screens/Register/Register';
 import PrivateRoute from './Components/PrivateRoute';
 import Detalles from './Components/screens/Detalles/Detalles';
 import { useAuth } from './contexts/AuthContext';
+import { useCart } from './contexts/CartContext';
 
 const App: React.FC = () => {
-  const { login } = useAuth();
+  const { login, userRole } = useAuth();
+ const { addToCart } = useCart();
 
   useEffect(() => {
     const authInfo = localStorage.getItem('authInfo');
@@ -43,7 +45,7 @@ const App: React.FC = () => {
           element={<PrivateRoute allowedRoles={["ADMIN"]} element={<Estadisticas />} />}
         />
 
-        <Route path="/detalles/:id" element={<Detalles />} />
+        <Route path="/detalles/:id" element={<Detalles addToCart={addToCart} userRole={userRole} />} />
       </Routes>
     </Router>
   );

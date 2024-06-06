@@ -3,18 +3,19 @@ import { Container, Grid, Typography, Card, CardContent, CardMedia, Box, Paper, 
 import { useParams } from 'react-router-dom';
 import InstrumentoService from '../../../service/InstrumentoService';
 import Instrumento from '../../../types/Instrumento';
-import { useAuth } from '../../../contexts/AuthContext';
-import { useCart } from '../../../contexts/CartContext';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { green } from '@mui/material/colors';
 
-const Detalles: React.FC = () => {
+interface DetallesProps {
+    addToCart: (id: number, cart: any[]) => void;
+    userRole: string; // Nuevo prop para el rol del usuario
+}
+
+const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
     const [instru, setInstrumento] = useState<Instrumento>();
     const instrumentoService = new InstrumentoService();
     const { id } = useParams<{ id: string }>();
     const url = import.meta.env.VITE_API_URL;
-    const { userRole } = useAuth();
-    const { cart, addToCart } = useCart();
 
     useEffect(() => {
         const fetchInstrumento = async () => {
@@ -30,7 +31,7 @@ const Detalles: React.FC = () => {
         };
 
         fetchInstrumento();
-    }, [id, instrumentoService]);
+    }, [id, instrumentoService, url]);
 
     const handleGenerarPDF = async () => {
         try {
@@ -100,9 +101,9 @@ const Detalles: React.FC = () => {
                                 {instru.categoria?.denominacion && (
                                     <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Categoría: {instru.categoria.denominacion}</Typography>
                                 )}
-                                {userRole === 'VISOR' && (
+                                {userRole === 'VISOR' && ( 
                                     <Grid item xs={12}>
-                                        <Button sx={{ mt: 2, width: '100%'}} variant="contained" onClick={() => addToCart(instru.id, cart)}>Agregar al carrito</Button>
+                                        <Button sx={{ mt: 2, width: '100%' }} variant="contained" onClick={() => addToCart(instru.id, [instru])}>Agregar al carrito</Button>
                                     </Grid>
                                 )}
                                 <Grid item xs={12}>
