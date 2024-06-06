@@ -5,23 +5,22 @@ import Home from './Components/screens/Home/Home';
 import Instrumento from './Components/screens/Instrumento/Instrumento';
 import Estadisticas from './Components/screens/Estadisticas/Estadisticas';
 import Navbar from './Components/ui/common/NavBar/NavBar';
-
 import Login from './Components/screens/Login/Login';
 import Register from './Components/screens/Register/Register';
 import { AuthProvider } from './contexts/AuthContext';
 import PrivateRoute from './Components/PrivateRoute';
-import useCartLogic from './utils/useCartLogic';
 import Detalles from './Components/screens/Detalles/Detalles';
-
+import CartProvider from './contexts/CartContext';
 const App: React.FC = () => {
-  const { cart, addToCart, removeFromCart, clearCart } = useCartLogic();
+
 
   return (
     <AuthProvider>
+      <CartProvider>
       <Router>
-        <Navbar cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} addToCart={addToCart} />
+        <Navbar />
         <Routes>
-          <Route path="/" element={<Home handleAddToCart={addToCart} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
@@ -41,6 +40,7 @@ const App: React.FC = () => {
           <Route path="/detalles/:id" element={<Detalles />} />
         </Routes>
       </Router>
+      </CartProvider>
     </AuthProvider>
   );
 };

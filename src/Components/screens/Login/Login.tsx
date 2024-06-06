@@ -16,29 +16,29 @@ const Login: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Autenticar al usuario
-    const { isAuthenticated, role } = await usuarioService.isAuthenticated(username, password, url);
-    if (isAuthenticated && role) {
-      login(username, role);
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Inicio de sesión exitoso',
-        showConfirmButton: false,
-        timer: 1500
-      });
-
-      // Redirigir al usuario a la página de inicio después del inicio de sesión exitoso
-      navigate('/');
-    } else {
+    try {
+      const { isAuthenticated, role, id } = await usuarioService.isAuthenticated(username, password, url);
+      if (isAuthenticated && role && id) {
+        login(username, role, id); 
+        console.log(username,role, id)
+        Swal.fire({
+          icon: 'success',
+          title: 'Inicio de sesión exitoso',
+          showConfirmButton: false,
+          timer: 1500
+        });
+        navigate('/');
+      } else {
+        throw new Error('Credenciales incorrectas');
+      }
+    } catch (error) {
       Swal.fire({
         icon: 'error',
-        title: 'Credenciales incorrectas',
-        text: 'Por favor, intente de nuevo.',
+        title: 'Error al iniciar sesión',
+        text:  'Ocurrió un error al intentar iniciar sesión.',
       });
     }
   };
-
   const handleGuestContinue = () => {
     navigate('/');
   };

@@ -17,21 +17,17 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useAuth } from '../../../../contexts/AuthContext';
-import CartInstrumento from '../../../../types/CartInstrumento';
 import CarritoPage from '../../../screens/CarritoPage/CarritoPage';
+import { useCart } from '../../../../contexts/CartContext';
+import CartInstrumento from '../../../../types/CartInstrumento';
 
-interface NavbarProps {
-  cart: CartInstrumento[];
-  removeFromCart: (productId: number) => void;
-  clearCart: () => void;
-  addToCart: (instrumentoId: number, products: CartInstrumento[]) => void;
-}
 
-const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToCart }) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userRole, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { addToCart, removeFromCart, cart, clearCart} = useCart();
 
   const handleCartClick = () => {
     setIsDrawerOpen(true);
@@ -58,7 +54,7 @@ const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToC
     setAnchorEl(null);
   };
 
-  const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+  const totalItems = cart.reduce((total: number, item: CartInstrumento) => total + item.quantity, 0);
 
   return (
     <>

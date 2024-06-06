@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Grid, Typography, CircularProgress } from '@mui/material';
 import InstrumentoService from '../../../service/InstrumentoService';
-import CartInstrumento from '../../../types/CartInstrumento';
+
 import InstrumentoCard from '../../ui/Cards/Instrumento/InstrumentoCard';
+import { useCart } from '../../../contexts/CartContext';
 
-interface HomeProps {
-  handleAddToCart: (instrumentoId: number, products: CartInstrumento[]) => void;
-}
 
-const Home: React.FC<HomeProps> = ({ handleAddToCart }) => {
+
+const Home = () => {
   const [instrumentos, setInstrumentos] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const instrumentoService = new InstrumentoService();
   const url = import.meta.env.VITE_API_URL;
+  const { addToCart} = useCart();
 
   useEffect(() => {
     const fetchInstrumentos = async () => {
@@ -50,7 +50,7 @@ const Home: React.FC<HomeProps> = ({ handleAddToCart }) => {
         <Grid container spacing={2}>
           {instrumentos.map((instrumento) => (
             <Grid item key={instrumento.id} xs={12} sm={6} md={4}>
-              <InstrumentoCard instrumento={instrumento} onAddToCart={() => handleAddToCart(instrumento.id, [instrumento])} />
+              <InstrumentoCard instrumento={instrumento} onAddToCart={() => addToCart(instrumento.id, [instrumento])} />
             </Grid>
           ))}
         </Grid>
