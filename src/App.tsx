@@ -27,29 +27,31 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+      <div style={{ paddingBottom: '56px', position: 'relative' }}>
+        <Navbar  />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-        <Route
-          path="/categorias"
-          element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Categoria />} />}
-        />
-        <Route
-          path="/instrumentos"
-          element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Instrumento />} />}
-        />
-        <Route
-          path="/estadisticas"
-          element={<PrivateRoute allowedRoles={["ADMIN"]} element={<Estadisticas />} />}
-        />
+          <Route
+            path="/categorias"
+            element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Categoria />} />}
+          />
+          <Route
+            path="/instrumentos"
+            element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Instrumento />} />}
+          />
+          <Route
+            path="/estadisticas"
+            element={<PrivateRoute allowedRoles={["ADMIN"]} element={<Estadisticas />} />}
+          />
 
-        <Route path="/detalles/:id" element={<Detalles addToCart={addToCart} userRole={userRole} />} />
+          <Route path="/detalles/:id" element={<Detalles addToCart={addToCart} userRole={userRole} />} />
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </Router>
   );
 };

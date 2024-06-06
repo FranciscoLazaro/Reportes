@@ -21,7 +21,6 @@ import CarritoPage from '../../../screens/CarritoPage/CarritoPage';
 import { useCart } from '../../../../contexts/CartContext';
 import CartInstrumento from '../../../../types/CartInstrumento';
 
-
 const Navbar = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userRole, logout } = useAuth();
@@ -58,36 +57,28 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Mi Tienda
+            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Mi Tienda</Link>
           </Typography>
           <Typography component="div" sx={{ flexGrow: 1 }}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Inicio</Link>
           </Typography>
-          {isAuthenticated && (userRole === 'ADMIN') && (
+          {isAuthenticated && (userRole === 'ADMIN' || userRole === 'OPERADOR') && (
             <>
               <Typography component="div" sx={{ flexGrow: 1 }}>
                 <Link to="/categorias" style={{ textDecoration: 'none', color: 'inherit' }}>Categorías</Link>
               </Typography>
               <Typography component="div" sx={{ flexGrow: 1 }}>
                 <Link to="/instrumentos" style={{ textDecoration: 'none', color: 'inherit' }}>Instrumentos</Link>
-              </Typography>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/estadisticas" style={{ textDecoration: 'none', color: 'inherit' }}>Estadísticas</Link>
               </Typography>
             </>
           )}
-          {isAuthenticated && (userRole === 'OPERADOR') && (
-            <>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/categorias" style={{ textDecoration: 'none', color: 'inherit' }}>Categorías</Link>
-              </Typography>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/instrumentos" style={{ textDecoration: 'none', color: 'inherit' }}>Instrumentos</Link>
-              </Typography>
-            </>
+          {isAuthenticated && userRole === 'ADMIN' && (
+            <Typography component="div" sx={{ flexGrow: 1 }}>
+              <Link to="/estadisticas" style={{ textDecoration: 'none', color: 'inherit' }}>Estadísticas</Link>
+            </Typography>
           )}
           {isAuthenticated && userRole === 'VISOR' && (
             <IconButton aria-label="Carrito de Compras" onClick={handleCartClick} color="inherit">
@@ -137,4 +128,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
