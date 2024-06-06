@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, Grid, TextField, Typography } from '@mui/material';
 import UsuarioService from '../../../service/UsuarioService';
@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
   const usuarioService = new UsuarioService();
-  const { login } = useAuth();
+  const { login , isAuthenticated } = useAuth();
   const url = import.meta.env.VITE_API_URL;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -20,7 +20,8 @@ const Login: React.FC = () => {
       const { isAuthenticated, role, id } = await usuarioService.isAuthenticated(username, password, url);
       if (isAuthenticated && role && id) {
         login(username, role, id); 
-        console.log(username,role, id)
+        // Almacenar la información de autenticación en el localStorage
+        localStorage.setItem('authInfo', JSON.stringify({ username, role, id }));
         Swal.fire({
           icon: 'success',
           title: 'Inicio de sesión exitoso',
@@ -42,6 +43,12 @@ const Login: React.FC = () => {
   const handleGuestContinue = () => {
     navigate('/');
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Container component="main" maxWidth="xs">

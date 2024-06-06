@@ -28,7 +28,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAuthenticated(false);
     setUserRole('');
     setUserName('');
-    setUserId(''); // Limpiar el id del usuario al cerrar sesión
+    setUserId('');
+    localStorage.removeItem('authInfo');
   };
 
   return (

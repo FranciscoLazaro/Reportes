@@ -3,12 +3,18 @@ import { Container, Grid, Typography, Card, CardContent, CardMedia, Box, Paper, 
 import { useParams } from 'react-router-dom';
 import InstrumentoService from '../../../service/InstrumentoService';
 import Instrumento from '../../../types/Instrumento';
+import { useAuth } from '../../../contexts/AuthContext';
+import { useCart } from '../../../contexts/CartContext';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import { green } from '@mui/material/colors';
 
 const Detalles: React.FC = () => {
     const [instru, setInstrumento] = useState<Instrumento>();
     const instrumentoService = new InstrumentoService();
     const { id } = useParams<{ id: string }>();
     const url = import.meta.env.VITE_API_URL;
+    const { userRole } = useAuth();
+    const { cart, addToCart } = useCart();
 
     useEffect(() => {
         const fetchInstrumento = async () => {
@@ -40,7 +46,6 @@ const Detalles: React.FC = () => {
             console.error('Error al generar el PDF:', error);
         }
     };
-    
 
     if (!instru) {
         return <Typography variant="body1">Cargando detalles del instrumento...</Typography>;
@@ -68,25 +73,40 @@ const Detalles: React.FC = () => {
                     <Paper elevation={3} sx={{ p: 2 }}>
                         <CardContent>
                             <Box mb={2}>
-                                <Typography variant="h6">Descripción</Typography>
-                                <Typography variant="body1">{instru.descripcion}</Typography>
+                                <Typography variant="h6" sx={{ color: green[500] }}>Descripción</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>{instru.descripcion}</Typography>
                             </Box>
                             <Box mb={2}>
-                                <Typography variant="h6">Detalles</Typography>
-                                <Typography variant="body1">Marca: {instru.marca}</Typography>
-                                <Typography variant="body1">Modelo: {instru.modelo}</Typography>
-                                <Typography variant="body1">Precio: ${instru.precio}</Typography>
+                                <Typography variant="h6" sx={{ color: green[500] }}>Detalles</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Marca:</Typography>
+                                <Typography variant="body1" sx={{ mb: 1 }}>{instru.marca}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Modelo:</Typography>
+                                <Typography variant="body1" sx={{ mb: 1 }}>{instru.modelo}</Typography>
+                                <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Precio:</Typography>
+                                <Typography variant="body1" sx={{ mb: 1 }}>{`${instru.precio}`}</Typography>
                                 {instru.costoEnvio && (
-                                    <Typography variant="body1">Costo de envío: {instru.costoEnvio}</Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>
+                                        Costo de envío: {instru.costoEnvio === 'Gratis' ? (
+                                            <Box sx={{ display: 'flex', alignItems: 'center', color: green[500] }}>
+                                                <LocalShippingIcon sx={{ mr: 1 }} />
+                                                Gratis
+                                            </Box>
+                                        ) : `$${instru.costoEnvio}`}
+                                    </Typography>
                                 )}
                                 {instru.cantidadVendida && (
-                                    <Typography variant="body1">Cantidad vendida: {instru.cantidadVendida}</Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Cantidad vendida: {instru.cantidadVendida}</Typography>
                                 )}
                                 {instru.categoria?.denominacion && (
-                                    <Typography variant="body1">Categoría: {instru.categoria.denominacion}</Typography>
+                                    <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Categoría: {instru.categoria.denominacion}</Typography>
+                                )}
+                                {userRole === 'VISOR' && (
+                                    <Grid item xs={12}>
+                                        <Button sx={{ mt: 2, width: '100%'}} variant="contained" onClick={() => addToCart(instru.id, cart)}>Agregar al carrito</Button>
+                                    </Grid>
                                 )}
                                 <Grid item xs={12}>
-                                    <Button sx={{mt:2}} variant="contained" onClick={handleGenerarPDF}>Generar PDF</Button>
+                                    <Button sx={{ mt: 2, width: '100%' }} variant="outlined" onClick={handleGenerarPDF}>Generar PDF</Button>
                                 </Grid>
                             </Box>
                         </CardContent>

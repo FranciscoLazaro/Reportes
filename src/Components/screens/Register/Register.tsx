@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, Button, Container, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography, Alert } from '@mui/material';
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from 'formik';
@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 
 import { Rol } from '../../../types/enum/Rol';
 import UsuarioService from '../../../service/UsuarioService';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface FormValues {
   nombreUsuario: string;
@@ -17,6 +18,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const usuarioService = new UsuarioService();
   const URL = import.meta.env.VITE_API_URL;
+  const {isAuthenticated } = useAuth();
 
   const validationSchema = Yup.object({
     nombreUsuario: Yup.string().required('Nombre de usuario es requerido'),
@@ -57,6 +59,11 @@ const Register: React.FC = () => {
       setSubmitting(false);
     }
   };
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   return (
     <Container component="main" maxWidth="xs">

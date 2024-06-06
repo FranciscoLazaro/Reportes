@@ -19,6 +19,8 @@ interface CarritoPageProps {
 const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clearCart, addToCart }) => {
   const [cantidadItems, setCantidadItems] = useState<{ [key: number]: number }>({});
   const [montoCarrito, setMontoCarrito] = useState<number>(0);
+  const [subtotal, setSubtotal] = useState<number>(0);
+  const [costoEnvio, setCostoEnvio] = useState<number>(0); // Cambiado a número
   const [finalizado, setFinalizado] = useState<boolean>(false);
   const [isCartEmpty, setIsCartEmpty] = useState<boolean>(false);
   const pedidoDetalleService = new PedidoDetalleService();
@@ -36,7 +38,17 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
 
   useEffect(() => {
     const total = carrito.reduce((acc, item) => acc + item.quantity * item.precio, 0);
-    setMontoCarrito(total);
+    setSubtotal(total); // Calcular subtotal
+  }, [carrito]);
+
+  useEffect(() => {
+    // Calcular el costo total sumando el subtotal y el costo de envío
+    setMontoCarrito(subtotal + costoEnvio);
+  }, [subtotal, costoEnvio]);
+
+  useEffect(() => {
+    // Actualizar el costo de envío cuando se agrega un instrumento al carrito
+    actualizarCostoEnvio();
   }, [carrito]);
 
   const handleFinalizarCompra = async () => {
@@ -54,7 +66,7 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
       }
     }
   
-    const totalPedido = carrito.reduce((total, item) => total + (item.precio * (cantidadItems[item.id] || 0)), 0);
+    const totalPedido = subtotal + costoEnvio;
   
     const pedido: PedidoPost = {
       totalPedido,
@@ -71,6 +83,22 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
   const handleVaciarCarrito = () => {
     clearCart();
     setIsCartEmpty(true);
+  };
+
+  const actualizarCostoEnvio = () => {
+    // Sumar el costo de envío de los instrumentos en el carrito
+    let costoEnvioTotal = 0;
+    
+    carrito.forEach(item => {
+      if (item.costoEnvio === 'Gratis') {
+        costoEnvioTotal += 0;
+      } else {
+        if(item.costoEnvio){
+        costoEnvioTotal += parseFloat(item.costoEnvio);
+        }
+      }
+    });
+    setCostoEnvio(costoEnvioTotal);
   };
 
   return (
@@ -97,6 +125,8 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
           )}
         </Grid>
         <Grid item>
+          <Typography variant="body1" gutterBottom>Subtotal: ${subtotal}</Typography>
+          <Typography variant="body1" gutterBottom>Costo de envío: ${costoEnvio}</Typography>
           <Typography variant="body1" gutterBottom>Total: ${montoCarrito}</Typography>
         </Grid>
         {!isCartEmpty && (
