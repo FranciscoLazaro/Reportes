@@ -70,7 +70,7 @@ const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToC
           <Typography component="div" sx={{ flexGrow: 1 }}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Inicio</Link>
           </Typography>
-          {isAuthenticated && userRole === 'ADMIN' && (
+          {isAuthenticated && (userRole === 'ADMIN') && (
             <>
               <Typography component="div" sx={{ flexGrow: 1 }}>
                 <Link to="/categorias" style={{ textDecoration: 'none', color: 'inherit' }}>Categorías</Link>
@@ -83,7 +83,17 @@ const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToC
               </Typography>
             </>
           )}
-          {isAuthenticated && userRole === 'OPERADOR' && (
+          {isAuthenticated && (userRole === 'OPERADOR') && (
+            <>
+              <Typography component="div" sx={{ flexGrow: 1 }}>
+                <Link to="/categorias" style={{ textDecoration: 'none', color: 'inherit' }}>Categorías</Link>
+              </Typography>
+              <Typography component="div" sx={{ flexGrow: 1 }}>
+                <Link to="/instrumentos" style={{ textDecoration: 'none', color: 'inherit' }}>Instrumentos</Link>
+              </Typography>
+            </>
+          )}
+          {isAuthenticated && userRole === 'VISOR' && (
             <IconButton aria-label="Carrito de Compras" onClick={handleCartClick} color="inherit">
               <Badge badgeContent={totalItems} color="secondary">
                 <ShoppingCartIcon />
@@ -120,7 +130,9 @@ const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToC
               <ListItemText primary="Cerrar Carrito" />
             </ListItem>
             <Divider />
-            <CarritoPage carrito={cart} removeFromCart={removeFromCart} clearCart={clearCart} addToCart={addToCart} />
+            {isAuthenticated && userRole === 'VISOR' && (
+              <CarritoPage carrito={cart} removeFromCart={removeFromCart} clearCart={clearCart} addToCart={addToCart} />
+            )}
           </List>
         </div>
       </Drawer>
@@ -129,3 +141,4 @@ const Navbar: React.FC<NavbarProps> = ({ cart, removeFromCart, clearCart, addToC
 };
 
 export default Navbar;
+

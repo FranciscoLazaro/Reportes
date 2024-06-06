@@ -3,9 +3,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Categoria from './Components/screens/Categoria/Categoria';
 import Home from './Components/screens/Home/Home';
 import Instrumento from './Components/screens/Instrumento/Instrumento';
-import Estadisticas from './Components/screens/Estadisticas/Estadisticas';  // Importa el nuevo componente de estadísticas
+import Estadisticas from './Components/screens/Estadisticas/Estadisticas';
 import Navbar from './Components/ui/common/NavBar/NavBar';
-import CarritoPage from './Components/screens/CarritoPage/CarritoPage';
+
 import Login from './Components/screens/Login/Login';
 import Register from './Components/screens/Register/Register';
 import { AuthProvider } from './contexts/AuthContext';
@@ -19,27 +19,25 @@ const App: React.FC = () => {
   return (
     <AuthProvider>
       <Router>
-        <Navbar cart={cart} removeFromCart={removeFromCart} clearCart={clearCart}  addToCart={addToCart}/>
+        <Navbar cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} addToCart={addToCart} />
         <Routes>
           <Route path="/" element={<Home handleAddToCart={addToCart} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route
-            path="/carrito"
-            element={<PrivateRoute requiredRole="OPERADOR" element={<CarritoPage carrito={cart} removeFromCart={removeFromCart} clearCart={clearCart}  addToCart={addToCart}/>} />}
-          />
+
           <Route
             path="/categorias"
-            element={<PrivateRoute requiredRole="ADMIN" element={<Categoria />} />}
+            element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Categoria />} />}
           />
           <Route
             path="/instrumentos"
-            element={<PrivateRoute requiredRole="ADMIN" element={<Instrumento />} />}
+            element={<PrivateRoute allowedRoles={["ADMIN", "OPERADOR"]} element={<Instrumento />} />}
           />
           <Route
-            path="/estadisticas"  // Agrega la ruta para estadísticas
-            element={<PrivateRoute requiredRole="ADMIN" element={<Estadisticas />} />}
+            path="/estadisticas"
+            element={<PrivateRoute allowedRoles={["ADMIN"]} element={<Estadisticas />} />}
           />
+
           <Route path="/detalles/:id" element={<Detalles />} />
         </Routes>
       </Router>

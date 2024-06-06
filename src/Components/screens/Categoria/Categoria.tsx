@@ -3,15 +3,17 @@ import { Box, Button, List, ListItem, ListItemText, Typography, Container } from
 import Categoria from '../../../types/Categoria';
 import CategoriaModal from '../../ui/Modals/CategoriaModal';
 import CategoriaService from '../../../service/CategoriaService';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const Categorias: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<Categoria | null>(null);
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const { userRole } = useAuth();
 
   const categoriaService = new CategoriaService();
   const url = import.meta.env.VITE_API_URL;
-  const  [isEditing, setIsEditing] = useState<boolean>(false)
+  const [isEditing, setIsEditing] = useState<boolean>(false)
 
   const fetchCategorias = async () => {
     try {
@@ -27,7 +29,7 @@ const Categorias: React.FC = () => {
   }, []);
 
   const handleAbrirModal = (categoria: Categoria | null) => {
-    if(categoria){
+    if (categoria) {
       setIsEditing(true)
       setCategoriaSeleccionada(categoria);
     }
@@ -61,15 +63,21 @@ const Categorias: React.FC = () => {
           <Typography variant="h5" gutterBottom>
             Categorías
           </Typography>
-          <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
+          {userRole === 'ADMIN' && (
+            <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
+          )}
         </Box>
 
         <List>
           {categorias.map(categoria => (
             <ListItem key={categoria.id}>
               <ListItemText primary={categoria.denominacion} />
-              <Button variant="contained" sx={{mr: 1}} color="primary" onClick={() => handleEditarCategoria(categoria)}>Editar</Button>
-              <Button variant="contained" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>Eliminar</Button>
+              <Button variant="contained" sx={{ mr: 1 }} color="primary" onClick={() => handleEditarCategoria(categoria)}>Editar</Button>
+              {userRole === 'ADMIN' && (
+                <Box>
+                  <Button variant="contained" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>Eliminar</Button>
+                </Box>
+              )}
             </ListItem>
           ))}
         </List>
@@ -77,7 +85,7 @@ const Categorias: React.FC = () => {
         <CategoriaModal
           open={modalOpen}
           handleClose={handleCloseModal}
-          initialValues={categoriaSeleccionada || { id: 0, denominacion: '' }} 
+          initialValues={categoriaSeleccionada || { id: 0, denominacion: '' }}
           getCategorias={fetchCategorias}
           isEditing={isEditing}
         />

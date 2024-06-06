@@ -4,6 +4,7 @@ import DeleteButton from './DeleteButton';
 import EditButton from './EditButton';
 import Row from '../../../types/Row';
 import Column from '../../../types/Column';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface Props {
   data: any[];
@@ -17,6 +18,7 @@ const TableComponent: React.FC<Props> = ({ data, columns, onEdit, onDelete }) =>
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [orderBy, setOrderBy] = useState<keyof Row>('');
   const [order, setOrder] = useState<'asc' | 'desc'>('asc');
+  const { userRole } = useAuth();
 
   const handleChangePage = (_event: unknown, newPage: number) => {
     setPage(newPage);
@@ -79,7 +81,7 @@ const TableComponent: React.FC<Props> = ({ data, columns, onEdit, onDelete }) =>
               {onEdit &&
                 <EditButton onClick={() => onEdit(row)} />
               }
-              {onDelete &&
+              {onDelete && (userRole === 'ADMIN') &&
                 <DeleteButton onClick={() => onDelete(row)} />}
             </Box>
           </TableCell>

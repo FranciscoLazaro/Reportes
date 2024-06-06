@@ -5,6 +5,7 @@ import Instrumento from '../../../types/Instrumento';
 import InstrumentoService from '../../../service/InstrumentoService';
 import TableComponent from '../../ui/TableComponent/TableComponent';
 import ModalInstrumento from '../../ui/Modals/ModalInstrumento';
+import { useAuth } from '../../../contexts/AuthContext';
 
 const InstrumentoPage: React.FC = () => {
   const [instrumentos, setInstrumentos] = useState<Instrumento[]>([]);
@@ -15,6 +16,7 @@ const InstrumentoPage: React.FC = () => {
   const [excelModalOpen, setExcelModalOpen] = useState<boolean>(false);
   const [fechaDesde, setFechaDesde] = useState<string>('');
   const [fechaHasta, setFechaHasta] = useState<string>('');
+  const { userRole } = useAuth();
 
   const instrumentoService = new InstrumentoService();
   const url = import.meta.env.VITE_API_URL;
@@ -82,10 +84,10 @@ const InstrumentoPage: React.FC = () => {
   };
 
   const columns: Column[] = [
+    { id: 'imagen', label: 'Imagen', renderCell: (row) => <img src={row.imagen} alt="Instrumento" style={{ width: '50px', height: '50px', borderRadius: '10px' }} /> },
     { id: 'instrumento', label: 'Instrumento', renderCell: (row) => row.instrumento },
     { id: 'marca', label: 'Marca', renderCell: (row) => row.marca || '-' },
     { id: 'modelo', label: 'Modelo', renderCell: (row) => row.modelo || '-' },
-    { id: 'imagen', label: 'Imagen', renderCell: (row) => <img src={row.imagen} alt="Instrumento" style={{ width: '50px', height: '50px' }} /> },
     { id: 'precio', label: 'Precio', renderCell: (row) => `$${row.precio}` },
   ];
 
@@ -95,9 +97,11 @@ const InstrumentoPage: React.FC = () => {
         <Typography variant="h4" component="h1" gutterBottom>
           Gestión de Instrumentos
         </Typography>
+        {userRole === 'ADMIN' && (
         <Button variant="contained" color="primary" onClick={() => handleAgregarInstrumento(null)}>
           Agregar Instrumento
         </Button>
+        )}
         <Button variant="contained" color="secondary" onClick={() => setExcelModalOpen(true)} style={{ marginLeft: '10px' }}>
         Generar Excel de Pedidos
         </Button>

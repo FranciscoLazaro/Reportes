@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardActions, Button, Typography, Box } from '@mui/material';
+import { Card, CardContent, CardActions, Button, Typography, Box, Grid } from '@mui/material';
 import { AddShoppingCart as AddShoppingCartIcon, Info as InfoIcon } from '@mui/icons-material';
 import CartInstrumento from '../../../../types/CartInstrumento';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 interface InstrumentoCardProps {
   instrumento: CartInstrumento;
@@ -10,7 +11,10 @@ interface InstrumentoCardProps {
 }
 
 const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToCart }) => {
+  const { isAuthenticated, userRole } = useAuth();
   const { instrumento: nombreInstrumento, marca, modelo, imagen, precio, descripcion } = instrumento;
+
+  const showAddToCartButton = isAuthenticated && userRole !== 'ADMIN' && userRole !== 'OPERADOR';
 
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
@@ -25,25 +29,33 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
         <Typography variant="body1" gutterBottom>Precio: ${precio}</Typography>
       </CardContent>
       <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Button
-          variant="contained"
-          color="primary"
-          startIcon={<AddShoppingCartIcon />}
-          onClick={() => onAddToCart(instrumento)}
-          sx={{ marginRight: 'auto' }}
-        >
-          Agregar al carrito
-        </Button>
-        <Link to={`/detalles/${instrumento.id}`} style={{ textDecoration: 'none' }}>
-          <Button
-            variant="outlined"
-            color="primary"
-            startIcon={<InfoIcon />}
-            sx={{ marginLeft: 'auto' }}
-          >
-            Ver detalles
-          </Button>
-        </Link>
+        <Grid container spacing={1}>
+          {showAddToCartButton && (
+            <Grid item xs={12}>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<AddShoppingCartIcon />}
+                onClick={() => onAddToCart(instrumento)}
+                fullWidth
+              >
+                Agregar al carrito
+              </Button>
+            </Grid>
+          )}
+          <Grid item xs={12}>
+            <Link to={`/detalles/${instrumento.id}`} style={{ textDecoration: 'none', width: '100%' }}>
+              <Button
+                variant="outlined"
+                color="primary"
+                startIcon={<InfoIcon />}
+                fullWidth
+              >
+                Ver detalles
+              </Button>
+            </Link>
+          </Grid>
+        </Grid>
       </CardActions>
     </Card>
   );

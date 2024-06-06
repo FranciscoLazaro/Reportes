@@ -1,5 +1,7 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, MenuItem, Select, InputLabel, FormControl, Grid } from '@mui/material';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 import CategoriaService from '../../../service/CategoriaService';
 import Categoria from '../../../types/Categoria';
 import Instrumento from '../../../types/Instrumento';
@@ -13,22 +15,23 @@ interface ModalInstrumentoProps {
     isEditing: boolean;
 }
 
+const validationSchema = yup.object().shape({
+    instrumento: yup.string().required('El nombre del instrumento es obligatorio').min(3, 'El nombre del instrumento debe tener al menos 3 caracteres'),
+    descripcion: yup.string().required('La descripción es obligatoria').min(10, 'La descripción debe tener al menos 10 caracteres'),
+    marca: yup.string().required('La marca es obligatoria'),
+    modelo: yup.string().required('El modelo es obligatorio'),
+    precio: yup.number().required('El precio es obligatorio').positive('El precio debe ser un número positivo'),
+    costoEnvio: yup.string().required('El costo de envío es obligatorio').test(
+        'is-valid-cost',
+        'El costo de envío debe ser "Gratis" o un número positivo',
+        value => value === 'Gratis' || /^[0-9]*\.?[0-9]+$/.test(value)
+    ),
+    cantidadVendida: yup.number().required('La cantidad vendida es obligatoria').integer('La cantidad vendida debe ser un número entero').min(0, 'La cantidad vendida no puede ser negativa'),
+    imagen: yup.string().url('Debe ser una URL válida')
+});
+
+
 const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, instrumentoAEditar, isEditing }) => {
-    const [instrumento, setInstrumento] = useState<Instrumento>({ 
-        id: 0,
-        instrumento: '',
-        marca: '',
-        modelo: '',
-        imagen: '',
-        precio: 0,
-        costoEnvio: '',
-        cantidadVendida: 0,
-        descripcion: '',
-        categoria: {
-            id: 0,
-            denominacion: ''
-        },
-    });
     const [categorias, setCategorias] = useState<Categoria[]>([]);
     const categoriaService = new CategoriaService();
     const instrumentoService = new InstrumentoService();
@@ -46,8 +49,8 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
         fetchCategorias();
     }, [url]);
 
-    const resetForm = () => {
-        setInstrumento({
+    const formik = useFormik({
+        initialValues: {
             id: 0,
             instrumento: '',
             marca: '',
@@ -57,147 +60,193 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
             costoEnvio: '',
             cantidadVendida: 0,
             descripcion: '',
-            categoria: {
-                id: 0,
-                denominacion: ''
-            },
-        });
-    };
+            categoria: categorias.length > 0 ? categorias[0] : { id: 0, denominacion: '' }
+        },
+        validationSchema,
+        onSubmit: async (values) => {
+            try {
+                if (isEditing) {
+                    await instrumentoService.put(url + '/instrumento', values.id, values);
+                } else {
+                    await instrumentoService.post(url + '/instrumento', values);
+                }
+                handleClose();
+            } catch (error) {
+                console.error('Error al guardar el producto:', error);
+            }
+        }
+    });
 
     useEffect(() => {
         if (open && !isEditing) {
-            resetForm();
+            formik.resetForm();
         }
     }, [open, isEditing]);
 
     useEffect(() => {
-        if (instrumentoAEditar && isEditing) { // Si estamos editando y hay un instrumento a editar
-            setInstrumento(instrumentoAEditar); // Utilizamos el instrumento a editar
+        if (instrumentoAEditar && isEditing) {
+            const instrumentoConValoresPorDefecto = {
+                ...instrumentoAEditar,
+                marca: instrumentoAEditar.marca || '',
+                modelo: instrumentoAEditar.modelo || '',
+                imagen: instrumentoAEditar.imagen || '',
+                precio: instrumentoAEditar.precio || 0,
+                costoEnvio: instrumentoAEditar.costoEnvio || '',
+                cantidadVendida: instrumentoAEditar.cantidadVendida || 0,
+                descripcion: instrumentoAEditar.descripcion || '',
+                categoria: instrumentoAEditar.categoria || (categorias.length > 0 ? categorias[0] : { id: 0, denominacion: '' })
+            };
+            formik.setValues(instrumentoConValoresPorDefecto);
         }
-    }, [instrumentoAEditar, isEditing]);
+    }, [instrumentoAEditar, isEditing, categorias]);
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setInstrumento(prevState => ({
-            ...prevState,
-            [name]: name === 'precio' || name === 'cantidad' || name === 'cantidadVendida' ? Number(value) : value
-        }));
-    };
+
 
     const handleCategoriaChange = (e: SelectChangeEvent<string>) => {
         const selectedCategoria = categorias.find(categoria => categoria.id === Number(e.target.value));
-        setInstrumento((prevState: any) => ({
-            ...prevState,
-            categoria: selectedCategoria || null
-        }));
-    };
-
-    const handleSubmit = async (values: Instrumento) => {
-        try {
-            if (isEditing) {
-                await instrumentoService.put(url + '/instrumento', instrumento.id, values); // Usamos instrumento.id
-            } else {
-                await instrumentoService.post(url + '/instrumento', values);
-            }
-            handleClose();
-        } catch (error) {
-            console.error('Error al guardar el producto:', error);
-        }
+        formik.setFieldValue('categoria', selectedCategoria || null);
     };
 
     return (
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle>{isEditing ? 'Editar Instrumento' : 'Crear Instrumento'}</DialogTitle>
-            <DialogContent>
-                <TextField
-                    name="instrumento"
-                    label="Instrumento"
-                    value={instrumento.instrumento}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <FormControl fullWidth margin="normal">
-                    <InputLabel id="categoria-label">Categoría</InputLabel>
-                    <Select
-                        labelId="categoria-label"
-                        id="categoria"
-                        value={instrumento.categoria ? instrumento.categoria.id.toString() : ''}
-                        onChange={handleCategoriaChange}
-                    >
-                        <MenuItem value="">
-                            <em>Seleccione una categoría</em>
-                        </MenuItem>
-                        {categorias.map(categoria => (
-                            <MenuItem key={categoria.id} value={categoria.id.toString()}>{categoria.denominacion}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <TextField
-                    name="marca"
-                    label="Marca"
-                    value={instrumento.marca || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="modelo"
-                    label="Modelo"
-                    value={instrumento.modelo || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="imagen"
-                    label="URL de Imagen"
-                    value={instrumento.imagen || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="precio"
-                    label="Precio"
-                    type="number"
-                    value={instrumento.precio || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="costoEnvio"
-                    label="Costo de Envío"
-                    value={instrumento.costoEnvio || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="cantidadVendida"
-                    label="Cantidad Vendida"
-                    type="number"
-                    value={instrumento.cantidadVendida || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    name="descripcion"
-                    label="Descripción"
-                    multiline
-                    rows={4}
-                    value={instrumento.descripcion || ''}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={handleClose} color="secondary">Cancelar</Button>
-                <Button onClick={() => handleSubmit(instrumento)} color="primary">Guardar</Button>
-            </DialogActions>
+            <form onSubmit={formik.handleSubmit}>
+                <DialogContent>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="instrumento"
+                                label="Instrumento"
+                                value={formik.values.instrumento}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.instrumento && Boolean(formik.errors.instrumento)}
+                                helperText={formik.touched.instrumento && formik.errors.instrumento}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <FormControl fullWidth margin="normal">
+                                <InputLabel id="categoria-label">Categoría</InputLabel>
+                                <Select
+                                    labelId="categoria-label"
+                                    id="categoria"
+                                    value={formik.values.categoria ? formik.values.categoria.id.toString() : ''}
+                                    onChange={handleCategoriaChange}
+                                    onBlur={formik.handleBlur}
+                                    required
+                                >
+                                    <MenuItem value="">
+                                        <em>Seleccione una categoría</em>
+                                    </MenuItem>
+                                    {categorias.map(categoria => (
+                                        <MenuItem key={categoria.id} value={categoria.id.toString()}>{categoria.denominacion}</MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="marca"
+                                label="Marca"
+                                value={formik.values.marca || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.marca && Boolean(formik.errors.marca)}
+                                helperText={formik.touched.marca && formik.errors.marca}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="modelo"
+                                label="Modelo"
+                                value={formik.values.modelo || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.modelo && Boolean(formik.errors.modelo)}
+                                helperText={formik.touched.modelo && formik.errors.modelo}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="imagen"
+                                label="URL de Imagen"
+                                value={formik.values.imagen || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="precio"
+                                label="Precio"
+                                type="number"
+                                value={formik.values.precio || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.precio && Boolean(formik.errors.precio)}
+                                helperText={formik.touched.precio && formik.errors.precio}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="costoEnvio"
+                                label="Costo de Envío"
+                                value={formik.values.costoEnvio || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.costoEnvio && Boolean(formik.errors.costoEnvio)}
+                                helperText={formik.touched.costoEnvio && formik.errors.costoEnvio}
+                            />
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <TextField
+                                name="cantidadVendida"
+                                label="Cantidad Vendida"
+                                type="number"
+                                value={formik.values.cantidadVendida || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.cantidadVendida && Boolean(formik.errors.cantidadVendida)}
+                                helperText={formik.touched.cantidadVendida && formik.errors.cantidadVendida}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                name="descripcion"
+                                label="Descripción"
+                                multiline
+                                rows={4}
+                                value={formik.values.descripcion || ''}
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                fullWidth
+                                margin="normal"
+                                error={formik.touched.descripcion && Boolean(formik.errors.descripcion)}
+                                helperText={formik.touched.descripcion && formik.errors.descripcion}
+                            />
+                        </Grid>
+                    </Grid>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="secondary">Cancelar</Button>
+                    <Button type="submit" color="primary">Guardar</Button>
+                </DialogActions>
+            </form>
         </Dialog>
     );
 };

@@ -3,18 +3,18 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface PrivateRouteProps {
-  requiredRole?: string;
+  allowedRoles?: string[];
   element: React.ReactElement;
 }
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ requiredRole, element }) => {
+const PrivateRoute: React.FC<PrivateRouteProps> = ({ allowedRoles, element }) => {
   const { isAuthenticated, userRole } = useAuth();
 
   if (!isAuthenticated) {
     return <Navigate to="/login" />;
   }
 
-  if (requiredRole && userRole !== requiredRole) {
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <Navigate to="/" />;
   }
 
