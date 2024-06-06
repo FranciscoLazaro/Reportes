@@ -30,7 +30,7 @@ const CheckoutMP: React.FC<CheckoutMPProps> = ({ montoCarrito }) => {
   };
 
   useEffect(() => {
-    initMercadoPago('TEST-5b58b558-60aa-484c-8fff-a76c3e78d96a', { locale: 'es-AR' });
+    initMercadoPago('TEST-9e6f0302-1127-45c8-9a27-34326bdb8775', { locale: 'es-AR' });
   }, []);
 
   return (
