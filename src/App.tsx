@@ -11,10 +11,11 @@ import PrivateRoute from './Components/PrivateRoute';
 import Detalles from './Components/screens/Detalles/Detalles';
 import { useAuth } from './contexts/AuthContext';
 import { useCart } from './contexts/CartContext';
+import NotFound from './Components/screens/NotFound/NotFound';
 
 const App: React.FC = () => {
   const { login, userRole } = useAuth();
- const { addToCart } = useCart();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const authInfo = localStorage.getItem('authInfo');
@@ -46,6 +47,8 @@ const App: React.FC = () => {
         />
 
         <Route path="/detalles/:id" element={<Detalles addToCart={addToCart} userRole={userRole} />} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );

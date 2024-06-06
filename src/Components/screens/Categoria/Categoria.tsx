@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, List, ListItem, ListItemText, Typography, Container } from '@mui/material';
+import { Box, Button, List, ListItem, ListItemText, Typography, Container, IconButton } from '@mui/material';
 import Categoria from '../../../types/Categoria';
 import CategoriaModal from '../../ui/Modals/CategoriaModal';
 import CategoriaService from '../../../service/CategoriaService';
 import { useAuth } from '../../../contexts/AuthContext';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
 
 const Categorias: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -47,50 +50,78 @@ const Categorias: React.FC = () => {
 
   const handleEliminarCategoria = async (categoriaId: number) => {
     try {
-      await categoriaService.delete(url + '/categoria', categoriaId);
-      // Actualizar las categorías después de eliminar
-      const categoriasActualizadas = categorias.filter(categoria => categoria.id !== categoriaId);
-      setCategorias(categoriasActualizadas);
+      // Mostrar un mensaje de confirmación antes de eliminar
+      const result = await Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esto!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+      });
+
+      if (result.isConfirmed) {
+        await categoriaService.delete(url + '/categoria', categoriaId);
+        // Actualizar las categorías después de eliminar
+        const categoriasActualizadas = categorias.filter(categoria => categoria.id !== categoriaId);
+        setCategorias(categoriasActualizadas);
+        // Mostrar un mensaje de éxito después de eliminar
+        Swal.fire(
+          '¡Eliminado!',
+          'La categoría ha sido eliminada.',
+          'success'
+        );
+      }
     } catch (error) {
       console.error('Error al eliminar la categoría:', error);
+      // Mostrar un mensaje de error si ocurre un error al eliminar
+      Swal.fire(
+        '¡Error!',
+        'Hubo un error al eliminar la categoría.',
+        'error'
+      );
     }
   };
 
   return (
-    <div>
-      <Container maxWidth="md">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
-          <Typography variant="h5" gutterBottom>
-            Categorías
-          </Typography>
-          {userRole === 'ADMIN' && (
-            <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
-          )}
-        </Box>
+    <Container maxWidth="md">
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
+        <Typography variant="h5" gutterBottom>
+          Categorías
+        </Typography>
+        {userRole === 'ADMIN' && (
+          <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
+        )}
+      </Box>
 
-        <List>
-          {categorias.map(categoria => (
-            <ListItem key={categoria.id}>
-              <ListItemText primary={categoria.denominacion} />
-              <Button variant="contained" sx={{ mr: 1 }} color="primary" onClick={() => handleEditarCategoria(categoria)}>Editar</Button>
+      <List>
+        {categorias.map(categoria => (
+          <ListItem key={categoria.id} sx={{ border: '1px solid #eee', borderRadius: '5px', my: 1 }}>
+            <ListItemText primary={categoria.denominacion} />
+            <Box>
+              <IconButton size="small" color="primary" onClick={() => handleEditarCategoria(categoria)}>
+                <EditIcon />
+              </IconButton>
               {userRole === 'ADMIN' && (
-                <Box>
-                  <Button variant="contained" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>Eliminar</Button>
-                </Box>
+                <IconButton size="small" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>
+                  <DeleteIcon />
+                </IconButton>
               )}
-            </ListItem>
-          ))}
-        </List>
+            </Box>
+          </ListItem>
+        ))}
+      </List>
 
-        <CategoriaModal
-          open={modalOpen}
-          handleClose={handleCloseModal}
-          initialValues={categoriaSeleccionada || { id: 0, denominacion: '' }}
-          getCategorias={fetchCategorias}
-          isEditing={isEditing}
-        />
-      </Container>
-    </div>
+      <CategoriaModal
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        initialValues={categoriaSeleccionada || { id: 0, denominacion: '' }}
+        getCategorias={fetchCategorias}
+        isEditing={isEditing}
+      />
+    </Container>
   );
 };
 

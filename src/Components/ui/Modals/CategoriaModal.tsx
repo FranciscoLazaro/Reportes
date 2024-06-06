@@ -10,7 +10,7 @@ interface CategoriaModalProps {
   handleClose: () => void;
   initialValues: Categoria;
   getCategorias: () => void;
-  isEditing: boolean; 
+  isEditing: boolean;
 }
 
 const CategoriaModal: React.FC<CategoriaModalProps> = ({ open, handleClose, initialValues, isEditing, getCategorias }) => {
@@ -25,11 +25,11 @@ const CategoriaModal: React.FC<CategoriaModalProps> = ({ open, handleClose, init
     try {
       if (isEditing) {
         // Editar categoría existente (PUT)
-        await categoriaService.put(url+'/categoria', initialValues.id, values);
+        await categoriaService.put(url + '/categoria', initialValues.id, values);
         getCategorias();
       } else {
         // Crear nueva categoría (POST)
-        await categoriaService.post(url+'/categoria', values);
+        await categoriaService.post(url + '/categoria', values);
         getCategorias();
       }
       handleClose();
@@ -54,8 +54,8 @@ const CategoriaModal: React.FC<CategoriaModalProps> = ({ open, handleClose, init
                 <ErrorMessage name="denominacion" component="div" />
               </div>
               <DialogActions>
-                <Button type="submit" color="primary">{isEditing ? 'Guardar' : 'Crear'}</Button>
                 <Button onClick={handleClose} color="secondary">Cancelar</Button>
+                <Button type="submit" color="primary">{isEditing ? 'Guardar' : 'Crear'}</Button>
               </DialogActions>
             </Form>
           )}
