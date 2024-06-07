@@ -64,7 +64,7 @@ const Home = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" style={{ backgroundColor: '#f5deb3', padding: '20px' }}>
       <Typography variant="h5" sx={{ my: 2 }}>
         Instrumentos Disponibles
       </Typography>

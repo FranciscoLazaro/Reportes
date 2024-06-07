@@ -20,6 +20,7 @@ import { useAuth } from '../../../../contexts/AuthContext';
 import CarritoPage from '../../../screens/CarritoPage/CarritoPage';
 import { useCart } from '../../../../contexts/CartContext';
 import CartInstrumento from '../../../../types/CartInstrumento';
+import { styled } from '@mui/material/styles';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -55,29 +56,42 @@ const Navbar = () => {
 
   const totalItems = cart.reduce((total: number, item: CartInstrumento) => total + item.quantity, 0);
 
+  const StyledAppBar = styled(AppBar)({
+    backgroundColor: '#8B4513', // Brown color
+  });
+
+  const StyledLink = styled(Link)({
+    textDecoration: 'none',
+    color: 'inherit',
+    margin: '0 10px',
+    '&:hover': {
+      color: '#FFD700', // Gold color on hover
+    },
+  });
+
   return (
     <>
-      <AppBar position="sticky">
+      <StyledAppBar position="sticky">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Mi Tienda</Link>
+            <StyledLink to="/">Mi Tienda</StyledLink>
           </Typography>
           <Typography component="div" sx={{ flexGrow: 1 }}>
-            <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Inicio</Link>
+            <StyledLink to="/">Inicio</StyledLink>
           </Typography>
           {isAuthenticated && (userRole === 'ADMIN' || userRole === 'OPERADOR') && (
             <>
               <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/categorias" style={{ textDecoration: 'none', color: 'inherit' }}>Categorías</Link>
+                <StyledLink to="/categorias">Categorías</StyledLink>
               </Typography>
               <Typography component="div" sx={{ flexGrow: 1 }}>
-                <Link to="/instrumentos" style={{ textDecoration: 'none', color: 'inherit' }}>Instrumentos</Link>
+                <StyledLink to="/instrumentos">Instrumentos</StyledLink>
               </Typography>
             </>
           )}
           {isAuthenticated && userRole === 'ADMIN' && (
             <Typography component="div" sx={{ flexGrow: 1 }}>
-              <Link to="/estadisticas" style={{ textDecoration: 'none', color: 'inherit' }}>Estadísticas</Link>
+              <StyledLink to="/estadisticas">Estadísticas</StyledLink>
             </Typography>
           )}
           {isAuthenticated && userRole === 'VISOR' && (
@@ -106,7 +120,7 @@ const Navbar = () => {
             </>
           )}
         </Toolbar>
-      </AppBar>
+      </StyledAppBar>
       <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerClose}>
         <div style={{ width: 300 }}>
           <List>

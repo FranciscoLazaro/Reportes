@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import InstrumentoService from '../../../service/InstrumentoService';
 import Instrumento from '../../../types/Instrumento';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
-import { green } from '@mui/material/colors';
+import { green, brown } from '@mui/material/colors';
 
 interface DetallesProps {
     addToCart: (id: number, cart: any[]) => void;
@@ -53,7 +53,7 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
     }
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, bgcolor: brown[200] }}>
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Typography variant="h4" gutterBottom>
@@ -71,14 +71,14 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ p: 2 }}>
+                    <Paper elevation={3} sx={{ p: 2, bgcolor: brown[200] }}>
                         <CardContent>
                             <Box mb={2}>
-                                <Typography variant="h6" sx={{ color: green[500] }}>Descripción</Typography>
+                                <Typography variant="h6" sx={{ color: brown[700] }}>Descripción</Typography>
                                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 2 }}>{instru.descripcion}</Typography>
                             </Box>
                             <Box mb={2}>
-                                <Typography variant="h6" sx={{ color: green[500] }}>Detalles</Typography>
+                                <Typography variant="h6" sx={{ color: brown[700] }}>Detalles</Typography>
                                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Marca:</Typography>
                                 <Typography variant="body1" sx={{ mb: 1 }}>{instru.marca}</Typography>
                                 <Typography variant="body1" sx={{ fontWeight: 'bold', mb: 1 }}>Modelo:</Typography>
@@ -103,11 +103,11 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
                                 )}
                                 {userRole === 'VISOR' && ( 
                                     <Grid item xs={12}>
-                                        <Button sx={{ mt: 2, width: '100%' }} variant="contained" onClick={() => addToCart(instru.id, [instru])}>Agregar al carrito</Button>
+                                        <Button sx={{ mt: 2, width: '100%', bgcolor: '#4a2e0b', color: '#fff' }} variant="contained" onClick={() => addToCart(instru.id, [instru])}>Agregar al carrito</Button>
                                     </Grid>
                                 )}
                                 <Grid item xs={12}>
-                                    <Button sx={{ mt: 2, width: '100%' }} variant="outlined" onClick={handleGenerarPDF}>Generar PDF</Button>
+                                    <Button sx={{ mt: 2, width: '100%', bgcolor: '#4a2e0b', color: '#fff' }} variant="outlined" onClick={handleGenerarPDF}>Generar PDF</Button>
                                 </Grid>
                             </Box>
                         </CardContent>

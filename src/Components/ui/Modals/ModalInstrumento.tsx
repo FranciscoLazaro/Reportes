@@ -100,15 +100,13 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
         }
     }, [instrumentoAEditar, isEditing, categorias]);
 
-
-
     const handleCategoriaChange = (e: SelectChangeEvent<string>) => {
         const selectedCategoria = categorias.find(categoria => categoria.id === Number(e.target.value));
         formik.setFieldValue('categoria', selectedCategoria || null);
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
+        <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth PaperProps={{ style: { backgroundColor: '#f5deb3' } }}>
             <DialogTitle>{isEditing ? 'Editar Instrumento' : 'Crear Instrumento'}</DialogTitle>
             <form onSubmit={formik.handleSubmit}>
                 <DialogContent>
@@ -243,8 +241,8 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
                     </Grid>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="secondary">Cancelar</Button>
-                    <Button type="submit" color="primary">Guardar</Button>
+                    <Button onClick={handleClose} style={{ backgroundColor: '#4a2e0b', color: '#fff' }}>Cancelar</Button>
+                    <Button type="submit" style={{ backgroundColor: '#4a2e0b', color: '#fff' }}>Guardar</Button>
                 </DialogActions>
             </form>
         </Dialog>

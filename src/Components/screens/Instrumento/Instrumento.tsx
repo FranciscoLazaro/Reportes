@@ -6,6 +6,9 @@ import InstrumentoService from '../../../service/InstrumentoService';
 import TableComponent from '../../ui/TableComponent/TableComponent';
 import ModalInstrumento from '../../ui/Modals/ModalInstrumento';
 import { useAuth } from '../../../contexts/AuthContext';
+import AddIcon from '@mui/icons-material/Add';
+import ExcelIcon from '@mui/icons-material/InsertDriveFile';
+import { brown } from '@mui/material/colors';
 
 const InstrumentoPage: React.FC = () => {
   const [instrumentos, setInstrumentos] = useState<Instrumento[]>([]);
@@ -92,18 +95,18 @@ const InstrumentoPage: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ bgcolor: brown[200], p: 2, borderRadius: 5 }}>
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
           Gestión de Instrumentos
         </Typography>
         {userRole === 'ADMIN' && (
-        <Button variant="contained" color="primary" onClick={() => handleAgregarInstrumento(null)}>
-          Agregar Instrumento
-        </Button>
+          <Button variant="contained" color="primary" onClick={() => handleAgregarInstrumento(null)} sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>
+            <AddIcon /> Agregar Instrumento
+          </Button>
         )}
-        <Button variant="contained" color="secondary" onClick={() => setExcelModalOpen(true)} style={{ marginLeft: '10px' }}>
-        Generar Excel de Pedidos
+        <Button variant="contained" color="secondary" onClick={() => setExcelModalOpen(true)} style={{ marginLeft: '10px', backgroundColor: '#4a2e0b', color: '#fff' }}>
+          <ExcelIcon /> Generar Excel de Pedidos
         </Button>
         {isLoading ? (
           <Box display="flex" justifyContent="center" my={4}>
@@ -113,8 +116,8 @@ const InstrumentoPage: React.FC = () => {
           <TableComponent
             data={instrumentos}
             columns={columns}
-            onEdit={handleAgregarInstrumento}
-            onDelete={handleDeleteInstrumento}
+            onEdit={handleAgregarInstrumento} 
+            onDelete={handleDeleteInstrumento} 
           />
         )}
         <ModalInstrumento
@@ -150,8 +153,8 @@ const InstrumentoPage: React.FC = () => {
             />
           </DialogContent>
           <DialogActions>
-            <Button onClick={() => setExcelModalOpen(false)} color="secondary">Cancelar</Button>
-            <Button onClick={handleGenerateExcel} color="primary">Generar</Button>
+            <Button onClick={() => setExcelModalOpen(false)}  sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>Cancelar</Button>
+            <Button onClick={handleGenerateExcel}  sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>Generar</Button>
           </DialogActions>
         </Dialog>
       </Box>

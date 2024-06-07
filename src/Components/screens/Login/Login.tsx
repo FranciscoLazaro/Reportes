@@ -51,7 +51,7 @@ const Login: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ bgcolor: '#f5deb3', p: 3, borderRadius: 5 }}>
       <Box
         sx={{
           marginTop: 8,
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, backgroundColor: '#4a2e0b', color: '#fff' }}
           >
             Iniciar sesión
           </Button>
@@ -100,7 +100,7 @@ const Login: React.FC = () => {
             type="button"
             fullWidth
             variant="outlined"
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, backgroundColor: '#4a2e0b', color: '#fff' }}
             onClick={handleGuestContinue}
           >
             Continuar como invitado

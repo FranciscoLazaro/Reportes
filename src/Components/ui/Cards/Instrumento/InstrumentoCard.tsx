@@ -17,11 +17,11 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
   const showAddToCartButton = isAuthenticated && userRole !== 'ADMIN' && userRole !== 'OPERADOR';
 
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#ecd9af', color: '#4a2e0b' }}>
       <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
         <img src={imagen} alt={nombreInstrumento} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
-      <CardContent sx={{ flexGrow: 1 }}>
+      <CardContent sx={{ flexGrow: 1, backgroundColor: '#f5deb3' }}>
         <Typography variant="h6">{nombreInstrumento}</Typography>
         <Typography variant="body2" color="textSecondary">{descripcion}</Typography>
         <Typography variant="body1">Marca: {marca}</Typography>
@@ -38,6 +38,7 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
                 startIcon={<AddShoppingCartIcon />}
                 onClick={() => onAddToCart(instrumento)}
                 fullWidth
+                sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}
               >
                 Agregar al carrito
               </Button>
@@ -50,6 +51,7 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
                 color="primary"
                 startIcon={<InfoIcon />}
                 fullWidth
+                sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}
               >
                 Ver detalles
               </Button>

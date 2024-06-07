@@ -7,6 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
+import { brown } from '@mui/material/colors';
 
 const Categorias: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -86,13 +87,13 @@ const Categorias: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md">
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
+    <Container maxWidth="md" sx={{ bgcolor: brown[200], p: 2, borderRadius: 5 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
         <Typography variant="h5" gutterBottom>
           Categorías
         </Typography>
         {userRole === 'ADMIN' && (
-          <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
+          <Button variant="contained" onClick={() => handleAbrirModal(null)} sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>Crear Categoría</Button>
         )}
       </Box>
 
@@ -101,11 +102,11 @@ const Categorias: React.FC = () => {
           <ListItem key={categoria.id} sx={{ border: '1px solid #eee', borderRadius: '5px', my: 1 }}>
             <ListItemText primary={categoria.denominacion} />
             <Box>
-              <IconButton size="small" color="primary" onClick={() => handleEditarCategoria(categoria)}>
+              <IconButton size="small" color="primary" onClick={() => handleEditarCategoria(categoria)} sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>
                 <EditIcon />
               </IconButton>
               {userRole === 'ADMIN' && (
-                <IconButton size="small" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>
+                <IconButton size="small" color="error" onClick={() => handleEliminarCategoria(categoria.id)} sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}>
                   <DeleteIcon />
                 </IconButton>
               )}

@@ -11,7 +11,7 @@ const Estadisticas: React.FC = () => {
       </Typography>
       <Grid container spacing={4}>
         <Grid item xs={12} md={6}>
-          <Box bgcolor="#f0f0f0" borderRadius={8} p={2}>
+          <Box bgcolor="#f5deb3" borderRadius={8} p={2}>
             <Typography variant="h6" component="h2" align="center" gutterBottom>
                Cantidad de instrumentos vendidos
             </Typography>
@@ -19,7 +19,7 @@ const Estadisticas: React.FC = () => {
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
-          <Box bgcolor="#f0f0f0" borderRadius={8} p={2}>
+          <Box bgcolor="#f5deb3" borderRadius={8} p={2}>
             <Typography variant="h6" component="h2" align="center" gutterBottom>
               Pedidos Agrupados por Año
             </Typography>
