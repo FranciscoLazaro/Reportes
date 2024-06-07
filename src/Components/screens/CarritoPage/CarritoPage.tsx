@@ -102,7 +102,7 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
   };
 
   return (
-    <Container sx={{ display: 'flex', justifyContent: 'center' }}>
+    <Container sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Grid container direction="column" spacing={2}>
         <Grid item>
           <Typography variant='h6' sx={{mt: 2}}>Carrito de Compras</Typography>
@@ -135,7 +135,7 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
               onClick={handleVaciarCarrito}
               variant="outlined"
               startIcon={<DeleteIcon />}
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
             >
               Vaciar Carrito
             </Button>
@@ -148,7 +148,7 @@ const CarritoPage: React.FC<CarritoPageProps> = ({ carrito, removeFromCart, clea
               onClick={handleFinalizarCompra}
               variant="contained"
               color="primary"
-              sx={{ width: '100%' }}
+              sx={{ width: '100%', backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
             >
               Finalizar Compra
             </Button>

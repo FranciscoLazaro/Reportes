@@ -41,7 +41,7 @@ const CategoriaModal: React.FC<CategoriaModalProps> = ({ open, handleClose, init
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>{isEditing ? 'Editar Categoría' : 'Crear Categoría'}</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{ backgroundColor: '#d0f0c0' }}>
         <Formik
           initialValues={initialValues}
           validationSchema={validationSchema}
@@ -54,8 +54,8 @@ const CategoriaModal: React.FC<CategoriaModalProps> = ({ open, handleClose, init
                 <ErrorMessage name="denominacion" component="div" />
               </div>
               <DialogActions>
-                <Button onClick={handleClose} color="secondary">Cancelar</Button>
-                <Button type="submit" color="primary">{isEditing ? 'Guardar' : 'Crear'}</Button>
+                <Button onClick={handleClose} color="secondary" sx={{ backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}>Cancelar</Button>
+                <Button type="submit" color="primary" sx={{ backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}>{isEditing ? 'Guardar' : 'Crear'}</Button>
               </DialogActions>
             </Form>
           )}

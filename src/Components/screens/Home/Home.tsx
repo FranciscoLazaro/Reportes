@@ -64,12 +64,12 @@ const Home = () => {
   );
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Typography variant="h5" sx={{ my: 2 }}>
         Instrumentos Disponibles
       </Typography>
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+      <Grid container spacing={2} alignItems="flex-end">
+        <Grid item xs={12} sm={8}>
           <TextField
             label="Buscar por nombre"
             variant="outlined"
@@ -79,7 +79,7 @@ const Home = () => {
             sx={{ mb: 2 }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={4}>
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
             <InputLabel id="select-category-label">Categoría</InputLabel>
             <Select
@@ -108,7 +108,10 @@ const Home = () => {
         <Grid container spacing={2}>
           {filteredInstrumentos.map((instrumento) => (
             <Grid item key={instrumento.id} xs={12} sm={6} md={4}>
-              <InstrumentoCard instrumento={instrumento} onAddToCart={() => addToCart(instrumento.id, [instrumento])} />
+              <InstrumentoCard 
+                instrumento={instrumento} 
+                onAddToCart={() => addToCart(instrumento.id, [instrumento])} 
+              />
             </Grid>
           ))}
         </Grid>

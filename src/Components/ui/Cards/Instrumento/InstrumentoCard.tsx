@@ -17,7 +17,7 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
   const showAddToCartButton = isAuthenticated && userRole !== 'ADMIN' && userRole !== 'OPERADOR';
 
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: 'lightgreen' }}>
       <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
         <img src={imagen} alt={nombreInstrumento} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
@@ -34,10 +34,10 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
             <Grid item xs={12}>
               <Button
                 variant="contained"
-                color="primary"
                 startIcon={<AddShoppingCartIcon />}
                 onClick={() => onAddToCart(instrumento)}
                 fullWidth
+                sx={{ backgroundColor: 'darkgreen', color: 'white', '&:hover': { backgroundColor: 'green' } }}
               >
                 Agregar al carrito
               </Button>
@@ -46,10 +46,10 @@ const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToC
           <Grid item xs={12}>
             <Link to={`/detalles/${instrumento.id}`} style={{ textDecoration: 'none', width: '100%' }}>
               <Button
-                variant="outlined"
-                color="primary"
+                variant="contained"
                 startIcon={<InfoIcon />}
                 fullWidth
+                sx={{ backgroundColor: 'darkgreen', color: 'white', '&:hover': { backgroundColor: 'green' } }}
               >
                 Ver detalles
               </Button>

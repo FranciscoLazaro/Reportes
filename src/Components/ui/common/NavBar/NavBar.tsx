@@ -26,7 +26,7 @@ const Navbar = () => {
   const { isAuthenticated, userRole, logout } = useAuth();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const { addToCart, removeFromCart, cart, clearCart} = useCart();
+  const { addToCart, removeFromCart, cart, clearCart } = useCart();
 
   const handleCartClick = () => {
     setIsDrawerOpen(true);
@@ -57,7 +57,7 @@ const Navbar = () => {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="sticky" sx={{ backgroundColor: 'darkgreen' }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Mi Tienda</Link>

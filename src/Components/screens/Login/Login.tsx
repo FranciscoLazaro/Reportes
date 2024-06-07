@@ -51,7 +51,7 @@ const Login: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Box
         sx={{
           marginTop: 8,
@@ -92,7 +92,7 @@ const Login: React.FC = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
           >
             Iniciar sesión
           </Button>
@@ -100,14 +100,14 @@ const Login: React.FC = () => {
             type="button"
             fullWidth
             variant="outlined"
-            sx={{ mt: 1 }}
+            sx={{ mt: 1, color: '#2E8B57', borderColor: '#2E8B57' }}
             onClick={handleGuestContinue}
           >
             Continuar como invitado
           </Button>
           <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
             <Grid item>
-              <Link to="/register">
+              <Link to="/register" style={{ color: '#2E8B57' }}>
                 No te has registrado? Registrarse
               </Link>
             </Grid>

@@ -66,7 +66,7 @@ const Register: React.FC = () => {
   }, [isAuthenticated, navigate]);
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Box
         sx={{
           marginTop: 8,
@@ -147,14 +147,14 @@ const Register: React.FC = () => {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{ mt: 3, mb: 2, backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
                 disabled={isSubmitting}
               >
                 Registrarse
               </Button>
               <Grid container justifyContent="flex-end" sx={{ mt: 2 }}>
                 <Grid item>
-                  <Link to="/login">
+                  <Link to="/login" style={{ color: '#2E8B57' }}>
                     ¿Ya tienes una cuenta? Iniciar Sesión
                   </Link>
                 </Grid>

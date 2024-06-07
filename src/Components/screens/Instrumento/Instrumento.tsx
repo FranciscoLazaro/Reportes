@@ -92,18 +92,26 @@ const InstrumentoPage: React.FC = () => {
   ];
 
   return (
-    <Container maxWidth="lg">
+    <Container maxWidth="lg" sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Box my={4}>
         <Typography variant="h4" component="h1" gutterBottom>
           Gestión de Instrumentos
         </Typography>
         {userRole === 'ADMIN' && (
-        <Button variant="contained" color="primary" onClick={() => handleAgregarInstrumento(null)}>
-          Agregar Instrumento
-        </Button>
+          <Button
+            variant="contained"
+            sx={{ backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
+            onClick={() => handleAgregarInstrumento(null)}
+          >
+            Agregar Instrumento
+          </Button>
         )}
-        <Button variant="contained" color="secondary" onClick={() => setExcelModalOpen(true)} style={{ marginLeft: '10px' }}>
-        Generar Excel de Pedidos
+        <Button
+          variant="contained"
+          sx={{ backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' }, marginLeft: '10px' }}
+          onClick={() => setExcelModalOpen(true)}
+        >
+          Generar Excel de Pedidos
         </Button>
         {isLoading ? (
           <Box display="flex" justifyContent="center" my={4}>
@@ -151,7 +159,12 @@ const InstrumentoPage: React.FC = () => {
           </DialogContent>
           <DialogActions>
             <Button onClick={() => setExcelModalOpen(false)} color="secondary">Cancelar</Button>
-            <Button onClick={handleGenerateExcel} color="primary">Generar</Button>
+            <Button
+              onClick={handleGenerateExcel}
+              sx={{ backgroundColor: '#2E8B57', color: 'white', '&:hover': { backgroundColor: '#276a45' } }}
+            >
+              Generar
+            </Button>
           </DialogActions>
         </Dialog>
       </Box>

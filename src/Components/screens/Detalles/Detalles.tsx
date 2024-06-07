@@ -53,7 +53,7 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
     }
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
             <Grid container spacing={4}>
                 <Grid item xs={12}>
                     <Typography variant="h4" gutterBottom>
@@ -71,7 +71,7 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
                     </Card>
                 </Grid>
                 <Grid item xs={12} md={6}>
-                    <Paper elevation={3} sx={{ p: 2 }}>
+                    <Paper elevation={3} sx={{ p: 2, backgroundColor: '#8FBC8F' }}>
                         <CardContent>
                             <Box mb={2}>
                                 <Typography variant="h6" sx={{ color: green[500] }}>Descripción</Typography>
@@ -103,11 +103,11 @@ const Detalles: React.FC<DetallesProps> = ({ addToCart, userRole }) => {
                                 )}
                                 {userRole === 'VISOR' && ( 
                                     <Grid item xs={12}>
-                                        <Button sx={{ mt: 2, width: '100%' }} variant="contained" onClick={() => addToCart(instru.id, [instru])}>Agregar al carrito</Button>
+                                        <Button sx={{ mt: 2, width: '100%', backgroundColor: '#2E8B57', color: 'white' }} variant="contained" onClick={() => addToCart(instru.id, [instru])}>Agregar al carrito</Button>
                                     </Grid>
                                 )}
                                 <Grid item xs={12}>
-                                    <Button sx={{ mt: 2, width: '100%' }} variant="outlined" onClick={handleGenerarPDF}>Generar PDF</Button>
+                                    <Button sx={{ mt: 2, width: '100%', backgroundColor: '#2E8B57', color: 'white' }} variant="contained" onClick={handleGenerarPDF}>Generar PDF</Button>
                                 </Grid>
                             </Box>
                         </CardContent>

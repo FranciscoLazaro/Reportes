@@ -8,13 +8,6 @@ import Instrumento from '../../../types/Instrumento';
 import InstrumentoService from '../../../service/InstrumentoService';
 import { SelectChangeEvent } from '@mui/material';
 
-interface ModalInstrumentoProps {
-    open: boolean;
-    handleClose: () => void;
-    instrumentoAEditar: Instrumento | null;
-    isEditing: boolean;
-}
-
 const validationSchema = yup.object().shape({
     instrumento: yup.string().required('El nombre del instrumento es obligatorio').min(3, 'El nombre del instrumento debe tener al menos 3 caracteres'),
     descripcion: yup.string().required('La descripción es obligatoria').min(10, 'La descripción debe tener al menos 10 caracteres'),
@@ -30,6 +23,12 @@ const validationSchema = yup.object().shape({
     imagen: yup.string().url('Debe ser una URL válida')
 });
 
+interface ModalInstrumentoProps {
+    open: boolean;
+    handleClose: () => void;
+    instrumentoAEditar: Instrumento | null;
+    isEditing: boolean;
+}
 
 const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, instrumentoAEditar, isEditing }) => {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
@@ -100,8 +99,6 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
         }
     }, [instrumentoAEditar, isEditing, categorias]);
 
-
-
     const handleCategoriaChange = (e: SelectChangeEvent<string>) => {
         const selectedCategoria = categorias.find(categoria => categoria.id === Number(e.target.value));
         formik.setFieldValue('categoria', selectedCategoria || null);
@@ -111,7 +108,7 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
         <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
             <DialogTitle>{isEditing ? 'Editar Instrumento' : 'Crear Instrumento'}</DialogTitle>
             <form onSubmit={formik.handleSubmit}>
-                <DialogContent>
+                <DialogContent sx={{ backgroundColor: '#d0f0c0' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={6}>
                             <TextField
@@ -171,84 +168,103 @@ const ModalInstrumento: React.FC<ModalInstrumentoProps> = ({ open, handleClose, 
                                 margin="normal"
                                 error={formik.touched.modelo && Boolean(formik.errors.modelo)}
                                 helperText={formik.touched.modelo && formik.errors.modelo}
-                            />
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    name="imagen"
+                                    label="URL de Imagen"
+                                    value={formik.values.imagen || ''}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    name="precio"
+                                    label="Precio"
+                                    type="number"
+                                    value={formik.values.precio || ''}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                    error={formik.touched.precio && Boolean(formik.errors.precio)}
+                                    helperText={formik.touched.precio && formik.errors.precio}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    name="costoEnvio"
+                                    label="Costo de Envío"
+                                    value={formik.values.costoEnvio || ''}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                    error={formik.touched.costoEnvio && Boolean(formik.errors.costoEnvio)}
+                                    helperText={formik.touched.costoEnvio && formik.errors.costoEnvio}
+                                />
+                            </Grid>
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    name="cantidadVendida"
+                                    label="Cantidad Vendida"
+                                    type="number"
+                                    value={formik.values.cantidadVendida || ''}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                    error={formik.touched.cantidadVendida && Boolean(formik.errors.cantidadVendida)}
+                                    helperText={formik.touched.cantidadVendida && formik.errors.cantidadVendida}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    name="descripcion"
+                                    label="Descripción"
+                                    multiline
+                                    rows={4}
+                                    value={formik.values.descripcion || ''}
+                                    onChange={formik.handleChange}
+                                    onBlur={formik.handleBlur}
+                                    fullWidth
+                                    margin="normal"
+                                    error={formik.touched.descripcion && Boolean(formik.errors.descripcion)}
+                                    helperText={formik.touched.descripcion && formik.errors.descripcion}
+                                />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                name="imagen"
-                                label="URL de Imagen"
-                                value={formik.values.imagen || ''}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                fullWidth
-                                margin="normal"
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                name="precio"
-                                label="Precio"
-                                type="number"
-                                value={formik.values.precio || ''}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                fullWidth
-                                margin="normal"
-                                error={formik.touched.precio && Boolean(formik.errors.precio)}
-                                helperText={formik.touched.precio && formik.errors.precio}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                name="costoEnvio"
-                                label="Costo de Envío"
-                                value={formik.values.costoEnvio || ''}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                fullWidth
-                                margin="normal"
-                                error={formik.touched.costoEnvio && Boolean(formik.errors.costoEnvio)}
-                                helperText={formik.touched.costoEnvio && formik.errors.costoEnvio}
-                            />
-                        </Grid>
-                        <Grid item xs={12} md={6}>
-                            <TextField
-                                name="cantidadVendida"
-                                label="Cantidad Vendida"
-                                type="number"
-                                value={formik.values.cantidadVendida || ''}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                fullWidth
-                                margin="normal"
-                                error={formik.touched.cantidadVendida && Boolean(formik.errors.cantidadVendida)}
-                                helperText={formik.touched.cantidadVendida && formik.errors.cantidadVendida}
-                            />
-                        </Grid>
-                        <Grid item xs={12}>
-                            <TextField
-                                name="descripcion"
-                                label="Descripción"
-                                multiline
-                                rows={4}
-                                value={formik.values.descripcion || ''}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                fullWidth
-                                margin="normal"
-                                error={formik.touched.descripcion && Boolean(formik.errors.descripcion)}
-                                helperText={formik.touched.descripcion && formik.errors.descripcion}
-                            />
-                        </Grid>
-                    </Grid>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="secondary">Cancelar</Button>
-                    <Button type="submit" color="primary">Guardar</Button>
-                </DialogActions>
-            </form>
-        </Dialog>
-    );
-};
+                    </DialogContent>
+                    <DialogActions sx={{ backgroundColor: '#004d40' }}>
+                        <Button
+                            onClick={handleClose}
+                            sx={{
+                                backgroundColor: 'darkgreen',
+                                color: 'white',
+                                '&:hover': { backgroundColor: 'green' },
+                            }}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            type="submit"
+                            sx={{
+                                backgroundColor: 'darkgreen',
+                                color: 'white',
+                                '&:hover': { backgroundColor: 'green' },
+                            }}
+                        >
+                            Guardar
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+        );
+    };
+    
+    export default ModalInstrumento;
 
-export default ModalInstrumento;

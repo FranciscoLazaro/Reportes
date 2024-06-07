@@ -86,13 +86,15 @@ const Categorias: React.FC = () => {
   };
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth="md" sx={{ backgroundColor: '#d0f0c0', padding: '2rem', borderRadius: '8px' }}>
       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", my: 1 }}>
         <Typography variant="h5" gutterBottom>
           Categorías
         </Typography>
         {userRole === 'ADMIN' && (
-          <Button variant="contained" onClick={() => handleAbrirModal(null)}>Crear Categoría</Button>
+          <Button variant="contained" sx={{ backgroundColor: '#006400', '&:hover': { backgroundColor: '#004d00' } }} onClick={() => handleAbrirModal(null)}>
+            Crear Categoría
+          </Button>
         )}
       </Box>
 
@@ -101,11 +103,11 @@ const Categorias: React.FC = () => {
           <ListItem key={categoria.id} sx={{ border: '1px solid #eee', borderRadius: '5px', my: 1 }}>
             <ListItemText primary={categoria.denominacion} />
             <Box>
-              <IconButton size="small" color="primary" onClick={() => handleEditarCategoria(categoria)}>
+              <IconButton size="small" sx={{ color: '#006400' }} onClick={() => handleEditarCategoria(categoria)}>
                 <EditIcon />
               </IconButton>
               {userRole === 'ADMIN' && (
-                <IconButton size="small" color="error" onClick={() => handleEliminarCategoria(categoria.id)}>
+                <IconButton size="small" sx={{ color: '#006400' }} onClick={() => handleEliminarCategoria(categoria.id)}>
                   <DeleteIcon />
                 </IconButton>
               )}
