@@ -65,11 +65,11 @@ const Home = () => {
 
   return (
     <Container maxWidth="lg" style={{ backgroundColor: '#f5deb3', padding: '20px' }}>
-      <Typography variant="h5" sx={{ my: 2 }}>
-        Instrumentos Disponibles
+      <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', my: 2 }}>
+        Instrumentos
       </Typography>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={9}>
           <TextField
             label="Buscar por nombre"
             variant="outlined"
@@ -79,7 +79,7 @@ const Home = () => {
             sx={{ mb: 2 }}
           />
         </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12} sm={3}>
           <FormControl fullWidth variant="outlined" sx={{ mb: 2 }}>
             <InputLabel id="select-category-label">Categoría</InputLabel>
             <Select

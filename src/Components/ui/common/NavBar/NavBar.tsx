@@ -21,6 +21,7 @@ import CarritoPage from '../../../screens/CarritoPage/CarritoPage';
 import { useCart } from '../../../../contexts/CartContext';
 import CartInstrumento from '../../../../types/CartInstrumento';
 import { styled } from '@mui/material/styles';
+import NavigationLinks from './NavigationLinks';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -57,7 +58,8 @@ const Navbar = () => {
   const totalItems = cart.reduce((total: number, item: CartInstrumento) => total + item.quantity, 0);
 
   const StyledAppBar = styled(AppBar)({
-    backgroundColor: '#8B4513', // Brown color
+    backgroundColor: '#4B3621', // Dark brown color
+    height: 80, // Increased height
   });
 
   const StyledLink = styled(Link)({
@@ -69,58 +71,67 @@ const Navbar = () => {
     },
   });
 
+  const ToolbarContent = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+  });
+
+  const NavigationIcons = styled('div')({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    width: '100%',
+  });
+
+  const NavigationItem = styled('div')({
+    marginRight: '10px',
+  });
+
+  const CenteredTypography = styled(Typography)({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  });
+
   return (
     <>
       <StyledAppBar position="sticky">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            <StyledLink to="/">Mi Tienda</StyledLink>
-          </Typography>
-          <Typography component="div" sx={{ flexGrow: 1 }}>
-            <StyledLink to="/">Inicio</StyledLink>
-          </Typography>
-          {isAuthenticated && (userRole === 'ADMIN' || userRole === 'OPERADOR') && (
-            <>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <StyledLink to="/categorias">Categorías</StyledLink>
-              </Typography>
-              <Typography component="div" sx={{ flexGrow: 1 }}>
-                <StyledLink to="/instrumentos">Instrumentos</StyledLink>
-              </Typography>
-            </>
-          )}
-          {isAuthenticated && userRole === 'ADMIN' && (
-            <Typography component="div" sx={{ flexGrow: 1 }}>
-              <StyledLink to="/estadisticas">Estadísticas</StyledLink>
-            </Typography>
-          )}
-          {isAuthenticated && userRole === 'VISOR' && (
-            <IconButton aria-label="Carrito de Compras" onClick={handleCartClick} color="inherit">
-              <Badge badgeContent={totalItems} color="secondary">
-                <ShoppingCartIcon />
-              </Badge>
-            </IconButton>
-          )}
-          {!isAuthenticated ? (
-            <IconButton aria-label="Iniciar Sesión" onClick={handleLoginClick} color="inherit">
-              <AccountCircleIcon />
-            </IconButton>
-          ) : (
-            <>
-              <IconButton aria-label="Usuario" onClick={handleMenuClick} color="inherit">
-                <AccountCircleIcon />
+          <ToolbarContent>
+            <CenteredTypography variant="h6" component="div">
+              <StyledLink to="/">TIENDA DE INSTRUMENTOS</StyledLink>
+            </CenteredTypography>
+            <NavigationIcons>
+              {!isAuthenticated ? (
+                <IconButton aria-label="Iniciar Sesión" onClick={handleLoginClick} color="inherit">
+                  <AccountCircleIcon />
+                </IconButton>
+              ) : (
+                <>
+                  <IconButton aria-label="Usuario" onClick={handleMenuClick} color="inherit">
+                    <AccountCircleIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                  >
+                    <MenuItem onClick={handleLogoutClick}>Cerrar Sesión</MenuItem>
+                  </Menu>
+                </>
+              )}
+              <IconButton aria-label="Carrito de Compras" onClick={handleCartClick} color="inherit">
+                <Badge badgeContent={totalItems} color="secondary">
+                  <ShoppingCartIcon />
+                </Badge>
               </IconButton>
-              <Menu
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleMenuClose}
-              >
-                <MenuItem onClick={handleLogoutClick}>Cerrar Sesión</MenuItem>
-              </Menu>
-            </>
-          )}
+            </NavigationIcons>
+          </ToolbarContent>
         </Toolbar>
       </StyledAppBar>
+      <NavigationLinks />
       <Drawer anchor="right" open={isDrawerOpen} onClose={handleDrawerClose}>
         <div style={{ width: 300 }}>
           <List>

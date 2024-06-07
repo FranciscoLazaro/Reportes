@@ -1,7 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Card, CardContent, CardActions, Button, Typography, Box, Grid } from '@mui/material';
-import { AddShoppingCart as AddShoppingCartIcon, Info as InfoIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { Card, CardContent, CardActions, Button, Typography, Box } from '@mui/material';
+import { AddShoppingCart as AddShoppingCartIcon } from '@mui/icons-material';
 import CartInstrumento from '../../../../types/CartInstrumento';
 import { useAuth } from '../../../../contexts/AuthContext';
 
@@ -11,54 +11,66 @@ interface InstrumentoCardProps {
 }
 
 const InstrumentoCard: React.FC<InstrumentoCardProps> = ({ instrumento, onAddToCart }) => {
+  const navigate = useNavigate();
   const { isAuthenticated, userRole } = useAuth();
   const { instrumento: nombreInstrumento, marca, modelo, imagen, precio, descripcion } = instrumento;
 
   const showAddToCartButton = isAuthenticated && userRole !== 'ADMIN' && userRole !== 'OPERADOR';
 
+  const handleCardClick = () => {
+    navigate(`/detalles/${instrumento.id}`);
+  };
+
   return (
-    <Card sx={{ display: 'flex', flexDirection: 'column', height: '100%', backgroundColor: '#ecd9af', color: '#4a2e0b' }}>
-      <Box sx={{ position: 'relative', pt: '56.25%', overflow: 'hidden' }}>
-        <img src={imagen} alt={nombreInstrumento} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
+    <Card 
+      sx={{ display: 'flex', backgroundColor: '#ecd9af', color: '#4a2e0b', cursor: 'pointer' }} 
+      onClick={handleCardClick}
+    >
+      <Box sx={{ width: '40%', position: 'relative' }}>
+        <img src={imagen} alt={nombreInstrumento} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
       </Box>
-      <CardContent sx={{ flexGrow: 1, backgroundColor: '#f5deb3' }}>
-        <Typography variant="h6">{nombreInstrumento}</Typography>
-        <Typography variant="body2" color="textSecondary">{descripcion}</Typography>
-        <Typography variant="body1">Marca: {marca}</Typography>
-        <Typography variant="body1">Modelo: {modelo}</Typography>
-        <Typography variant="body1" gutterBottom>Precio: ${precio}</Typography>
-      </CardContent>
-      <CardActions sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Grid container spacing={1}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '60%' }}>
+        <CardContent sx={{ flexGrow: 1, backgroundColor: '#f5deb3' }}>
+          <Typography variant="h6">{nombreInstrumento}</Typography>
+          <Typography variant="body2" color="textSecondary">{descripcion}</Typography>
+          <Typography variant="body1" gutterBottom>${precio}</Typography>
+        </CardContent>
+        <CardActions sx={{ display: 'flex', justifyContent: 'center' }} onClick={(e) => e.stopPropagation()}>
           {showAddToCartButton && (
-            <Grid item xs={12}>
-              <Button
-                variant="contained"
-                color="primary"
-                startIcon={<AddShoppingCartIcon />}
-                onClick={() => onAddToCart(instrumento)}
-                fullWidth
-                sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}
-              >
-                Agregar al carrito
-              </Button>
-            </Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => onAddToCart(instrumento)}
+              sx={{ 
+                backgroundColor: '#4a2e0b', 
+                color: '#fff',
+                minWidth: 'auto',
+                p: 0.5,
+                '& .MuiButton-startIcon': {
+                  m: 0
+                }
+              }}
+              startIcon={
+                <Box 
+                  component="span"
+                  sx={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    borderRadius: '50%', 
+                    width: 24, 
+                    height: 24, 
+                    backgroundColor: '#fff', 
+                    color: '#4a2e0b'
+                  }}
+                >
+                  <AddShoppingCartIcon fontSize="small" />
+                </Box>
+              }
+            />
           )}
-          <Grid item xs={12}>
-            <Link to={`/detalles/${instrumento.id}`} style={{ textDecoration: 'none', width: '100%' }}>
-              <Button
-                variant="outlined"
-                color="primary"
-                startIcon={<InfoIcon />}
-                fullWidth
-                sx={{ backgroundColor: '#4a2e0b', color: '#fff' }}
-              >
-                Ver detalles
-              </Button>
-            </Link>
-          </Grid>
-        </Grid>
-      </CardActions>
+        </CardActions>
+      </Box>
     </Card>
   );
 };
